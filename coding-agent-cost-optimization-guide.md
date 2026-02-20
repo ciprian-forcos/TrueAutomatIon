@@ -2,6 +2,45 @@
 
 **Author:** Ciprian Forcos | **Date:** February 2026
 **Hardware:** i7-1370P (20 threads), 32GB RAM, no dedicated GPU, Windows 10/11 (native)
+**Working Directory:** `C:\TrueAutomaIon`
+
+---
+
+## 🔖 SESSION BREADCRUMB — Last updated: 2026-02-20
+installed python, docker and WSL
+**Status: CONFIG FILES CREATED — AWAITING MANUAL PREREQUISITES**
+
+### What exists on disk
+- ✅ This guide (`coding-agent-cost-optimization-guide.md`)
+- ✅ `.env` — created (placeholders only — **Ciprian must fill in real API keys**)
+- ✅ `config.yaml` — created
+- ✅ `docker-compose.yml` — created
+- ✅ `oracle/oracle.py` — created
+
+### What Ciprian still needs to do manually (in order)
+1. ❓ Install **Ollama for Windows** — Part 1.1 done
+2. ❓ Install **Docker Desktop** — Part 1.2 done
+3. ❓ Install **Python 3.10+** — Part 1.3 done 
+4. ❓ Get **Anthropic + xAI API keys** — Part 1.4 i ll do that later
+5. ❓ Set **Ollama env vars** (`OLLAMA_KEEP_ALIVE=-1`, `OLLAMA_HOST=0.0.0.0:11434`, `OLLAMA_ORIGINS=*`) and restart Ollama — Part 2.2
+6. ❓ Run `ollama pull qwen2.5:1.5b` and `ollama pull qwen2.5-coder:7b` — Part 2.1
+7. ⚠️ **Edit `.env`** — replace placeholder API keys with real keys
+8. ❓ Run `docker compose up -d` from `C:\TrueAutomatIon\`
+
+### Next agent action (pick up here)
+1. Ask Ciprian which manual steps above are done
+2. Run verification tests from Part 3.6 (curl the 4 model endpoints)
+3. Run `python oracle\oracle.py "list all files in src"` to test routing
+4. Configure Cursor (Part 5) — set base URL to `http://localhost:4000/v1`
+
+### Known discrepancy
+- Guide says `C:\TrueAutomaIon` (one 't') — actual folder is `TrueAutomatIon` (two 't's). Same place.
+
+### Model string to update
+- `config.yaml` line for `l4-architect` uses `claude-opus-4-5-20251101`
+- Update to `claude-opus-4-6-...` once confirmed at console.anthropic.com
+
+---
 
 ---
 
@@ -141,13 +180,13 @@ If the 7B model takes >30s per response, your system is memory-constrained. In t
 ### 3.1 Create Project Directory
 
 ```powershell
-mkdir C:\litellm-proxy
-cd C:\litellm-proxy
+mkdir C:\TrueAutomaIon
+cd C:\TrueAutomaIon
 ```
 
 ### 3.2 Create the Environment File
 
-Create `C:\litellm-proxy\.env` in any text editor (VS Code recommended). Make sure to save with **UTF-8 encoding** and **LF line endings**:
+Create `C:\TrueAutomaIon\.env` in any text editor (VS Code recommended). Make sure to save with **UTF-8 encoding** and **LF line endings**:
 
 ```
 LITELLM_MASTER_KEY=sk-litellm-master-change-this-to-something-random
@@ -157,7 +196,7 @@ XAI_API_KEY=xai-your-actual-key-here
 
 ### 3.3 Create the LiteLLM Config
 
-Create `C:\litellm-proxy\config.yaml`:
+Create `C:\TrueAutomaIon\config.yaml`:
 
 ```yaml
 general_settings:
@@ -235,7 +274,7 @@ fallbacks:
 
 ### 3.4 Create Docker Compose File
 
-Create `C:\litellm-proxy\docker-compose.yml`:
+Create `C:\TrueAutomaIon\docker-compose.yml`:
 
 ```yaml
 version: '3.8'
@@ -263,7 +302,7 @@ services:
 ### 3.5 Start LiteLLM
 
 ```powershell
-cd C:\litellm-proxy
+cd C:\TrueAutomaIon
 docker compose up -d
 ```
 
@@ -302,7 +341,7 @@ pip install litellm tiktoken
 
 ### 4.2 The Oracle Script
 
-Save as `C:\litellm-proxy\oracle.py`:
+Save as `C:\TrueAutomaIon\oracle\oracle.py`:
 
 ```python
 """
@@ -463,7 +502,7 @@ if __name__ == "__main__":
 ### 4.3 Test the Oracle
 
 ```powershell
-cd C:\litellm-proxy
+cd C:\TrueAutomaIon
 
 # Should route to L1
 python oracle.py "list all files in the src directory"
@@ -602,7 +641,7 @@ Step 6: You → L4 (Opus): "Review this implementation against the spec.
 
 ### 7.1 Add PostgreSQL (for persistent budget tracking)
 
-Update your `C:\litellm-proxy\docker-compose.yml`:
+Update your `C:\TrueAutomaIon\docker-compose.yml`:
 
 ```yaml
 version: '3.8'
@@ -687,7 +726,7 @@ ollama run qwen2.5:1.5b --keepalive -1
 # Type /bye to exit chat (model stays loaded)
 
 # 3. Start LiteLLM proxy
-cd C:\litellm-proxy
+cd C:\TrueAutomaIon
 docker compose up -d
 
 # 4. Open Cursor, start coding
@@ -696,7 +735,7 @@ docker compose up -d
 ### Stop Everything
 
 ```powershell
-cd C:\litellm-proxy
+cd C:\TrueAutomaIon
 docker compose down
 
 # Ollama: right-click tray icon → Quit

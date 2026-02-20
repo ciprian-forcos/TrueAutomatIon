@@ -1,0 +1,71 @@
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
+
+litellm_settings:
+  drop_params: true
+  num_retries: 2
+  request_timeout: 300
+
+model_list:
+  # ============================================
+  # LEVEL 1: The Intern (Local, Free)
+  # ============================================
+  - model_name: l1-intern
+    litellm_params:
+      model: ollama/qwen2.5:1.5b
+      api_base: "http://host.docker.internal:11434"
+      tpm: 5000
+
+  # ============================================
+  # LEVEL 2: Junior Dev (Local, Free)
+  # ============================================
+  - model_name: l2-junior
+    litellm_params:
+      model: ollama/qwen2.5-coder:7b
+      api_base: "http://host.docker.internal:11434"
+      tpm: 3000
+
+  # ============================================
+  # LEVEL 3: Senior Dev (Grok, Cheap)
+  # ============================================
+  - model_name: l3-senior
+    litellm_params:
+      model: xai/grok-4-1-fast-reasoning
+      api_key: os.environ/XAI_API_KEY
+      timeout: 300
+      max_retries: 2
+
+  # ============================================
+  # LEVEL 4: Architect (Claude Opus, Expensive)
+  # ============================================
+  - model_name: l4-architect
+    litellm_params:
+      model: anthropic/claude-opus-4-5-20251101
+      # TODO: update model string once claude-opus-4-6 identifier is confirmed
+      # Check: https://console.anthropic.com or docs.anthropic.com
+      api_key: os.environ/ANTHROPIC_API_KEY
+      timeout: 300
+      max_retries: 1
+
+  # ============================================
+  # CONVENIENCE ALIASES
+  # ============================================
+  # "default" routes to Grok (best cost/quality ratio)
+  - model_name: default
+    litellm_params:
+      model: xai/grok-4-1-fast-reasoning
+      api_key: os.environ/XAI_API_KEY
+      timeout: 300
+
+  # Claude Sonnet for mid-tier tasks
+  - model_name: l3-sonnet
+    litellm_params:
+      model: anthropic/claude-sonnet-4-5-20250929
+      api_key: os.environ/ANTHROPIC_API_KEY
+      timeout: 300
+
+# Fallback chains
+fallbacks:
+  - {l2-junior: [l3-senior]}
+  - {l3-senior: [l3-sonnet]}
+  - {l4-architect: [l3-senior]}

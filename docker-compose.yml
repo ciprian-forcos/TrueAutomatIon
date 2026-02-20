@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    env_file:
+      - .env
+    volumes:
+      - ./config.yaml:/app/config.yaml
+    ports:
+      - "4000:4000"
+    command: ["--config", "/app/config.yaml", "--port", "4000"]
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    restart: unless-stopped
